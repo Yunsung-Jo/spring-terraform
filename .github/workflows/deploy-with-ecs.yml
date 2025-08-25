@@ -11,9 +11,8 @@ env:
   ECR_REPOSITORY: moyeohaeng
   ECS_CLUSTER: moyeohaeng-cluster
   ECS_SERVICE: moyeohaeng-service
-  ECS_TASK_DEFINITION_FAMILY: moyeohaeng-td
+  ECS_TASK_DEFINITION: moyeohaeng-td
   CONTAINER_NAME: moyeohaeng
-  ECS_TASK_DEFINITION_TEMPLATE: .aws/task-definition.json
 
 jobs:
   deploy:
@@ -47,22 +46,21 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-      - name: Render Amazon ECS task definition
-        id: render-task-def # 스텝 ID는 'render-task-def' 입니다.
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION_TEMPLATE }}
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
           container-name: ${{ env.CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.image }}
 
-      - name: Deploy to Amazon ECS
+      - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ${{ steps.render-task-def.outputs.task-definition }}
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
-
 
 # CD에서 테라폼을 실행시켜야 하는가?
 # 최신 이미지 사용하도록?
