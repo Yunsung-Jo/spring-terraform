@@ -11,7 +11,7 @@ env:
   ECR_REPOSITORY: moyeohaeng
   ECS_CLUSTER: moyeohaeng-cluster
   ECS_SERVICE: moyeohaeng-service
-  ECS_TASK_DEFINITION: moyeohaeng-td
+  ECS_TASK_DEFINITION_FAMILY: moyeohaeng-td
   CONTAINER_NAME: moyeohaeng
 
 jobs:
@@ -50,7 +50,7 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          task-definition-family: ${{ env.ECS_TASK_DEFINITION_FAMILY }}
           container-name: ${{ env.CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.image }}
 
