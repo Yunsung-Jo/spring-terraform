@@ -8,3 +8,19 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+# Prometheus
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, health, metrics
+  metrics:
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+    tags:
+      application: test
+  endpoint:
+    prometheus:
+      access: unrestricted
