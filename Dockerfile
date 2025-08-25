@@ -9,6 +9,6 @@ RUN ./gradlew bootJar
 FROM openjdk:21-slim
 WORKDIR /app
 
-COPY --from=builder build/libs/*.jar app.jar
+COPY --from=builder /app/build/libs/*.jar app.jar
 
 ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "/app.jar"]
