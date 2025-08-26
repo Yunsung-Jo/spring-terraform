@@ -17,16 +17,15 @@ spring:
 
 # Prometheus
 management:
+  server:
+    port: 9090
   endpoints:
     web:
       exposure:
-        include: prometheus, health, metrics
+        include: prometheus,health
   metrics:
     distribution:
       percentiles-histogram:
         "[http.server.requests]": true
     tags:
-      application: test
-  endpoint:
-    prometheus:
-      access: unrestricted
+      application: ${spring.application.name}
