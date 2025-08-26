@@ -6,9 +6,10 @@ RUN chmod +x gradlew
 RUN ./gradlew bootJar
 
 
-FROM openjdk:21-slim
+FROM openjdk:21-jre-alpine
 WORKDIR /app
 
+RUN apk --no-cache add curl
 COPY --from=builder /app/build/libs/*.jar app.jar
 
 ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
