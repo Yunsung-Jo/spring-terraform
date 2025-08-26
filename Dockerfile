@@ -6,7 +6,7 @@ RUN chmod +x gradlew
 RUN ./gradlew bootJar
 
 
-FROM openjdk:21-jre-alpine
+FROM amazoncorretto:21-jre-alpine
 WORKDIR /app
 
 RUN apk --no-cache add curl
